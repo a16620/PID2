@@ -81,7 +81,15 @@ struct vec3 {
 
 		return r;
 	}
+
+	static const vec3 up;
+	static const vec3 right;
+	static const vec3 forward;
 };
+
+const vec3 vec3::up = vec3(0, 1, 0);
+const vec3 vec3::right = vec3(1, 0, 0);
+const vec3 vec3::forward = vec3(0, 0, 1);
 
 struct Quat {
 	double w;
