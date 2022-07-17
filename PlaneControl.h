@@ -4,6 +4,8 @@
 
 class PlaneController {
 public:
+	static void SetupPin();
+
 	static void SetAiler1(const double& angle);
 	static void SetAiler2(const double& angle);
 

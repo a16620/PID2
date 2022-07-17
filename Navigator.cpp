@@ -3,6 +3,23 @@
 Navigator::Navigator()
 {
     rotation = &PlaneGyro::getInstance().rotation;
+    go_forward = true;
+}
+
+void Navigator::update()
+{
+    position += Quat::rotate(plane_speed, *rotation);
+}
+
+void Navigator::goForward()
+{
+    go_forward = true;
+    forward_angle_target = PlaneGyro::getInstance().rot_vec;
+}
+
+void Navigator::followTarget()
+{
+    go_forward = false;
 }
 
 vec3 Navigator::projection_angle(vec3 target) const
@@ -21,10 +38,21 @@ vec3 Navigator::projection_angle(vec3 target) const
 
     const auto size = rel_pos.size();
 
-    angle.x = asin(prj_y / size); //pitch
-    angle.y = asin(prj_x / size); //yaw
+    angle.x = asin(prj_y / size); //pitch 차
+    angle.y = asin(prj_x / size); //yaw 차
+    angle.z = prj_z; //거리
     //angle.z = asin(prj_z / size); //사용안함
 
 
     return angle;
+}
+
+vec3 Navigator::adj_angle()
+{
+    if (go_forward) {
+        return forward_angle_target-PlaneGyro::getInstance().rot_vec;
+    }
+    else {
+        return projection_angle(target_pos);
+    }
 }
