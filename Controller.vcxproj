@@ -140,7 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="arduino.h" />
-    <ClInclude Include="ardu_math.h" />
+    <ClInclude Include="ardu_utility.h" />
     <ClInclude Include="ardu_time.h" />
     <ClInclude Include="Navigator.h" />
     <ClInclude Include="PlaneControl.h" />
@@ -151,6 +151,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Navigator.cpp" />
     <ClCompile Include="PlaneControl.cpp" />
+    <ClCompile Include="vec_math.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

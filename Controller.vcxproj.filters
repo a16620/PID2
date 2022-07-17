@@ -27,7 +27,7 @@
     <ClInclude Include="ardu_time.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="ardu_math.h">
+    <ClInclude Include="ardu_utility.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Navigator.h">
@@ -45,6 +45,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="PlaneControl.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="vec_math.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

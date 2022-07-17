@@ -9,7 +9,8 @@ public:
 private:
 	Quat* rotation;
 	vec3 position;
-
+public:
+	
 	vec3 projection_angle(vec3 target) const;
 };
 

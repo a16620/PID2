@@ -1,6 +1,5 @@
 #pragma once
-#include "ardu_time.h"
-#include "ardu_math.h"
+#include "ardu_utility.h"
 
 class PIDControl
 {
@@ -50,20 +49,16 @@ private:
 		return kP * error;
 	}
 
-	double I_Control(const double& error) noexcept {
+	double I_Control(const double& error, const double& dt) noexcept {
 		if (bIntegrating)
-			integ_acc += error;
+			integ_acc += error * dt;
 		//limit?
 		return integ_acc * kI;
 	}
 
-	double D_Control(const double& error) noexcept {
-		const Time current_time = now();
-		
-		const double sec_delta = max(0.05, GetTimeDelta(current_time, last_check));
-		const double d_value = (error - last_error) / sec_delta;
+	double D_Control(const double& error, const double& dt) noexcept {	
+		const double d_value = min((error - last_error) / dt, output_limit);
 
-		last_check = current_time;
 		last_error = error;
 
 		fder = rD * fder + (1 - rD) * d_value;
@@ -72,8 +67,15 @@ private:
 	}
 
 public:
-	double GetControlValue(const double& error) noexcept {
-		auto c_val =  P_Control(error) + I_Control(error) + D_Control(error);
+	double GetControlValue(const double& target, const double& current) noexcept {
+		const Time current_time = now();
+		auto time_delta = GetTimeDelta(current_time, last_check);
+		
+		const auto error = target - current;
+		auto c_val =  P_Control(error) + I_Control(error, time_delta) + D_Control(-current, time_delta);
+		
+		last_check = current_time;
+
 
 		if (abs(c_val) > output_limit) {
 			if (comp_sign(error, c_val))

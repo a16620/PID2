@@ -33,8 +33,6 @@ public:
 	void update();
 };
 
-PlaneGyro PlaneGyro::inst;
-
 class YawController : public PIDControl {
 public:
 	YawController();

@@ -1,5 +1,7 @@
 #include "PlaneControl.h"
 
+PlaneGyro PlaneGyro::inst;
+
 YawController::YawController()
 {
 	SetOutputLimit(100);
@@ -8,9 +10,8 @@ YawController::YawController()
 
 void YawController::Set(const double& angle)
 {
-	double error = angle - PlaneGyro::getInstance().rot_vec.y;
-	double v = GetControlValue(error);
-	short cv = map(v, -100, 100, -MATH_PI / 2, MATH_PI / 2);
+	double v = GetControlValue(angle, PlaneGyro::getInstance().rot_vec.y);
+	short cv = math_map(v, -100, 100, -MATH_PI / 2, MATH_PI / 2);
 	PlaneController::SetRudder(cv);
 }
 
@@ -22,9 +23,8 @@ PitchController::PitchController()
 
 void PitchController::Set(const double& angle)
 {
-	double error = angle - PlaneGyro::getInstance().rot_vec.x;
-	double v = GetControlValue(error);
-	short cv = map(v, -100, 100, -MATH_PI / 2, MATH_PI / 2);
+	double v = GetControlValue(angle, PlaneGyro::getInstance().rot_vec.x);
+	short cv = math_map(v, -100, 100, -MATH_PI / 2, MATH_PI / 2);
 	PlaneController::SetElev(cv);
 }
 
@@ -36,9 +36,8 @@ RollController::RollController()
 
 void RollController::Set(const double& angle)
 {
-	double error = angle - PlaneGyro::getInstance().rot_vec.z;
-	double v = GetControlValue(error);
-	short cv = map(v, -100, 100, -MATH_PI / 2, MATH_PI / 2);
+	double v = GetControlValue(angle, PlaneGyro::getInstance().rot_vec.z);
+	short cv = math_map(v, -100, 100, -MATH_PI / 2, MATH_PI / 2);
 	PlaneController::SetAiler1(cv);
 	PlaneController::SetAiler2(-cv);
 }
