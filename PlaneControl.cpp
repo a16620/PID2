@@ -5,7 +5,6 @@ PlaneGyro PlaneGyro::inst;
 YawController::YawController()
 {
 	SetOutputLimit(100);
-	Begin();
 }
 
 void YawController::Set(const double& angle)
@@ -18,7 +17,6 @@ void YawController::Set(const double& angle)
 PitchController::PitchController()
 {
 	SetOutputLimit(100);
-	Begin();
 }
 
 void PitchController::Set(const double& angle)
@@ -31,7 +29,6 @@ void PitchController::Set(const double& angle)
 RollController::RollController()
 {
 	SetOutputLimit(100);
-	Begin();
 }
 
 void RollController::Set(const double& angle)
@@ -59,4 +56,29 @@ void PlaneGyro::calibrate()
 
 	calibration_rotation = sensor_input;
 	update();
+}
+
+TimeChecker TimeChecker::inst;
+
+TimeChecker::TimeChecker()
+{
+	last_checked = now();
+	delta = 0;
+}
+
+void TimeChecker::update()
+{
+	auto _now = now();
+	delta = GetTimeDelta(last_checked, _now);
+	last_checked = _now;
+}
+
+double TimeChecker::deltaTime()
+{
+	return delta;
+}
+
+TimeChecker& TimeChecker::getInstance()
+{
+	return inst;
 }

@@ -38,6 +38,23 @@ public:
 	void calibrate();
 };
 
+class TimeChecker {
+	static TimeChecker inst;
+
+	Time last_checked;
+	double delta;
+
+	TimeChecker();
+
+	TimeChecker(const TimeChecker&) = delete;
+	TimeChecker& operator=(const TimeChecker&) = delete;
+public:
+	void update();
+	double deltaTime();
+
+	static TimeChecker& getInstance();
+};
+
 class YawController : public PIDControl {
 public:
 	YawController();
