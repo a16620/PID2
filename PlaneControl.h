@@ -1,5 +1,6 @@
 #pragma once
 #include "PIDControl.h"
+#include "vec_math.h"
 
 class PlaneController {
 public:
@@ -9,54 +10,47 @@ public:
 	static void SetRudder(const double& angle);
 	
 	static void SetElev(const double& angle);
-
-	//!!분리
-	static double YawAngle();
-	static double RollAngle();
-	static double PitchAngle();
 };
+
+//자이로 값은 3축을 한번에 읽음. 물리 읽기와 소프트웨어 읽기를 분리
+class PlaneGyro {
+private:
+	PlaneGyro() {}
+	~PlaneGyro() {}
+	
+	PlaneGyro(const PlaneGyro&) = delete;
+	PlaneGyro& operator=(const PlaneGyro&) = delete;
+
+	static PlaneGyro inst;
+public:
+	static PlaneGyro& getInstance() {
+		return inst;
+	}
+public:
+	Quat rotation;//사원수
+	vec3 rot_vec; //라디안각
+
+	void update();
+};
+
+PlaneGyro PlaneGyro::inst;
 
 class YawController : public PIDControl {
 public:
-	YawController() {
-		SetOutputLimit(100);
-		Begin();
-	}
+	YawController();
 
-	void Set(const double& angle) {
-		double error = angle - PlaneController::YawAngle();
-		double v = GetControlValue(error);
-		short cv = map(v, -100, 100, -MATH_PI / 2, MATH_PI/2);
-		PlaneController::SetRudder(cv);
-	}
+	void Set(const double& angle);
 };
 
 class PitchController : public PIDControl {
-	PitchController() {
-		SetOutputLimit(100);
-		Begin();
-	}
+	PitchController();
 
-	void Set(const double& angle) {
-		double error = angle - PlaneController::PitchAngle();
-		double v = GetControlValue(error);
-		short cv = map(v, -100, 100, -MATH_PI / 2, MATH_PI / 2);
-		PlaneController::SetElev(cv);
-	}
+	void Set(const double& angle);
 };
 
 class RollController : public PIDControl {
 public:
-	RollController() {
-		SetOutputLimit(100);
-		Begin();
-	}
+	RollController();
 
-	void Set(const double& angle) {
-		double error = angle - PlaneController::RollAngle();
-		double v = GetControlValue(error);
-		short cv = map(v, -100, 100, -MATH_PI / 2, MATH_PI / 2);
-		PlaneController::SetAiler1(cv);
-		PlaneController::SetAiler2(-cv);
-	}
+	void Set(const double& angle);
 };

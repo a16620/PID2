@@ -4,7 +4,10 @@
 
 class Navigator
 {
-	Quat rotation;
+public:
+	Navigator();
+private:
+	Quat* rotation;
 	vec3 position;
 
 	vec3 projection_angle(vec3 target) const;
