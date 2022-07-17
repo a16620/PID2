@@ -23,6 +23,8 @@ private:
 	PlaneGyro(const PlaneGyro&) = delete;
 	PlaneGyro& operator=(const PlaneGyro&) = delete;
 
+	vec3 calibration_rotation;
+
 	static PlaneGyro inst;
 public:
 	static PlaneGyro& getInstance() {
@@ -33,6 +35,7 @@ public:
 	vec3 rot_vec; //라디안각
 
 	void update();
+	void calibrate();
 };
 
 class YawController : public PIDControl {

@@ -1,7 +1,5 @@
 #pragma once
 #include <math.h>
-#include "arduino.h"
-
 
 //3ย๗ฟ๘ บคลอ
 struct vec3 {

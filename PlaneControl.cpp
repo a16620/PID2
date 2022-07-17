@@ -45,7 +45,18 @@ void RollController::Set(const double& angle)
 void PlaneGyro::update()
 {
 	//읽기
+	vec3 sensor_input;
+
+	rot_vec = sensor_input - calibration_rotation;
 
 	//쿼터니언 변환
 	rotation = Quat::Euler(rot_vec.x, rot_vec.y, rot_vec.z);
+}
+
+void PlaneGyro::calibrate()
+{
+	vec3 sensor_input;
+
+	calibration_rotation = sensor_input;
+	update();
 }

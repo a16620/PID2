@@ -139,9 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="arduino.h" />
     <ClInclude Include="ardu_utility.h" />
-    <ClInclude Include="ardu_time.h" />
     <ClInclude Include="Navigator.h" />
     <ClInclude Include="PlaneControl.h" />
     <ClInclude Include="PIDControl.h" />

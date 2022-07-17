@@ -18,7 +18,6 @@ inline double math_map(double x, double in_min, double in_max, double out_min, d
 }
 
 #ifdef WINDOWS
-#include "arduino.h"
 #include <chrono>
 
 #define max(a, b) (a > b ? a : b)
