@@ -10,7 +10,7 @@ private:
 	double integ_acc;
 	
 	Time last_check;
-	double last_error, fder;
+	double last_error, last_deriv, filter;
 
 	double output_limit;
 
@@ -18,8 +18,10 @@ public:
 	PIDControl() noexcept {
 		kP = kD = kI = 0;
 		rD = 0.9;
-		integ_acc = last_error = fder = 0;
+		integ_acc = last_error = last_deriv = 0;
 		bIntegrating = true;
+
+		filter = 1 / (2 * MATH_PI * 60); //(2 * MATH_PI * frequency)
 
 		output_limit = 200;
 	}
@@ -51,19 +53,24 @@ private:
 
 	double I_Control(const double& error, const double& dt) noexcept {
 		if (bIntegrating)
-			integ_acc += error * dt;
+			integ_acc += kI * error * dt;
 		//limit?
-		return integ_acc * kI;
+		return integ_acc;
 	}
 
 	double D_Control(const double& error, const double& dt) noexcept {	
-		const double d_value = min((error - last_error) / dt, output_limit);
+		if (kD != 0 && dt != 0) {
+			const double d_value = min((error - last_error) / dt, output_limit); //Å¬¸®ÇÎ
 
-		last_error = error;
+			auto deriv = last_deriv + (dt / (filter + dt)) * (d_value - last_deriv);
 
-		fder = rD * fder + (1 - rD) * d_value;
+			last_error = error;
+			last_deriv = deriv;
 
-		return fder * kD;
+			return deriv * kD;
+		}
+
+		return 0;
 	}
 
 public:
