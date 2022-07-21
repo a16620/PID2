@@ -9,7 +9,7 @@ YawController::YawController()
 
 void YawController::Set(const double& angle)
 {
-	double v = GetControlValue(angle, PlaneGyro::getInstance().rotation.y);
+	double v = GetControlValue(angle, PlaneGyro::getInstance().rotation.z);
 	short cv = math_map(v, -100, 100, -MATH_PI / 2, MATH_PI / 2);
 	PlaneController::SetRudder(cv);
 }
@@ -21,7 +21,7 @@ PitchController::PitchController()
 
 void PitchController::Set(const double& angle)
 {
-	double v = GetControlValue(angle, PlaneGyro::getInstance().rotation.x);
+	double v = GetControlValue(angle, PlaneGyro::getInstance().rotation.y);
 	short cv = math_map(v, -100, 100, -MATH_PI / 2, MATH_PI / 2);
 	PlaneController::SetElev(cv);
 }
@@ -33,7 +33,7 @@ RollController::RollController()
 
 void RollController::Set(const double& angle)
 {
-	double v = GetControlValue(angle, PlaneGyro::getInstance().rotation.z);
+	double v = GetControlValue(angle, PlaneGyro::getInstance().rotation.x);
 	short cv = math_map(v, -100, 100, -MATH_PI / 2, MATH_PI / 2);
 	PlaneController::SetAiler1(cv);
 	PlaneController::SetAiler2(-cv);
