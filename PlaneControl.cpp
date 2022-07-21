@@ -9,7 +9,7 @@ YawController::YawController()
 
 void YawController::Set(const double& angle)
 {
-	double v = GetControlValue(angle, PlaneGyro::getInstance().rot_vec.y);
+	double v = GetControlValue(angle, PlaneGyro::getInstance().rotation.y);
 	short cv = math_map(v, -100, 100, -MATH_PI / 2, MATH_PI / 2);
 	PlaneController::SetRudder(cv);
 }
@@ -21,7 +21,7 @@ PitchController::PitchController()
 
 void PitchController::Set(const double& angle)
 {
-	double v = GetControlValue(angle, PlaneGyro::getInstance().rot_vec.x);
+	double v = GetControlValue(angle, PlaneGyro::getInstance().rotation.x);
 	short cv = math_map(v, -100, 100, -MATH_PI / 2, MATH_PI / 2);
 	PlaneController::SetElev(cv);
 }
@@ -33,7 +33,7 @@ RollController::RollController()
 
 void RollController::Set(const double& angle)
 {
-	double v = GetControlValue(angle, PlaneGyro::getInstance().rot_vec.z);
+	double v = GetControlValue(angle, PlaneGyro::getInstance().rotation.z);
 	short cv = math_map(v, -100, 100, -MATH_PI / 2, MATH_PI / 2);
 	PlaneController::SetAiler1(cv);
 	PlaneController::SetAiler2(-cv);
@@ -44,10 +44,7 @@ void PlaneGyro::update()
 	//읽기
 	vec3 sensor_input;
 
-	rot_vec = sensor_input - calibration_rotation;
-
-	//쿼터니언 변환
-	rotation = Quat::Euler(rot_vec.x, rot_vec.y, rot_vec.z);
+	rotation = sensor_input - calibration_rotation;
 }
 
 void PlaneGyro::calibrate()

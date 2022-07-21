@@ -52,6 +52,7 @@ struct Quat {
 	Quat operator*(const vec3& o) const;
 
 	static Quat Euler(double x, double y, double z);
+	static Quat Euler(vec3 r);
 
 	static vec3 rotate(const vec3& v, const Quat& q);
 };

@@ -7,7 +7,7 @@ class Navigator
 public:
 	Navigator();
 private:
-	Quat* rotation;
+	Quat rotation;
 	vec3 position;
 	
 	bool go_forward;

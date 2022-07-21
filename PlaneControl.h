@@ -31,8 +31,7 @@ public:
 		return inst;
 	}
 public:
-	Quat rotation;//사원수
-	vec3 rot_vec; //라디안각
+	vec3 rotation; //라디안각
 
 	void update();
 	void calibrate();

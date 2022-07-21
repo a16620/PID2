@@ -1,9 +1,9 @@
 #include "vec_math.h"
 #include "ardu_utility.h" //!!아두이노 ide에선 제거
 
-const vec3 vec3::up = vec3(0, 1, 0);
-const vec3 vec3::right = vec3(1, 0, 0);
-const vec3 vec3::forward = vec3(0, 0, 1);
+const vec3 vec3::up = vec3(0, 0, 1);
+const vec3 vec3::right = vec3(0, 1, 0);
+const vec3 vec3::forward = vec3(1, 0, 0);
 
 vec3::vec3() {
 	x = y = z = 0;
@@ -142,6 +142,22 @@ Quat Quat::Euler(double x, double y, double z) {
 
 	const double sin_x = sin(x), sin_y = sin(y), sin_z = sin(z),
 		cos_x = cos(x), cos_y = cos(y), cos_z = cos(z);
+
+	q.w = cos_z * cos_y * cos_x + sin_z * sin_y * sin_x;
+	q.v.x = cos_z * cos_y * sin_x - sin_z * sin_y * cos_x;
+	q.v.y = cos_z * sin_y * cos_x + sin_z * cos_y * sin_x;
+	q.v.z = sin_z * cos_y * cos_x - cos_z * sin_y * sin_x;
+
+	return q;
+}
+
+Quat Quat::Euler(vec3 r) {
+	r = r/2;
+
+	Quat q;
+
+	const double sin_x = sin(r.x), sin_y = sin(r.y), sin_z = sin(r.z),
+		cos_x = cos(r.x), cos_y = cos(r.y), cos_z = cos(r.z);
 
 	q.w = cos_z * cos_y * cos_x + sin_z * sin_y * sin_x;
 	q.v.x = cos_z * cos_y * sin_x - sin_z * sin_y * cos_x;
