@@ -92,3 +92,23 @@ void MasterControl::process()
 
 	PlaneController::SetRudder(rd_ang);
 }
+
+void PlaneController::SetupPin()
+{
+}
+
+void PlaneController::SetAiler1(const double& angle)
+{
+}
+
+void PlaneController::SetAiler2(const double& angle)
+{
+}
+
+void PlaneController::SetRudder(const double& angle)
+{
+}
+
+void PlaneController::SetElev(const double& angle)
+{
+}
