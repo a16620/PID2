@@ -1,20 +1,21 @@
 #include "Navigator.h"
+#include "PlaneControl.h"
 
-Navigator::Navigator()
+Navigator::Navigator() : gyro(PlaneGyro::getInstance())
 {
     go_forward = true;
 }
 
 void Navigator::update()
 {
-    rotation = Quat::Euler(PlaneGyro::getInstance().rotation);
+    rotation = Quat::Euler(gyro.rotation);
     position += Quat::rotate(plane_speed, rotation);
 }
 
 void Navigator::goForward()
 {
     go_forward = true;
-    forward_angle_target = PlaneGyro::getInstance().rotation;
+    forward_angle_target = gyro.rotation;
 }
 
 void Navigator::followTarget()
@@ -49,7 +50,7 @@ vec3 Navigator::projection_angle(vec3 target) const
 vec3 Navigator::adj_angle()
 {
     if (go_forward) {
-        return forward_angle_target-PlaneGyro::getInstance().rotation;
+        return forward_angle_target-gyro.rotation;
     }
     else {
         return projection_angle(target_pos);

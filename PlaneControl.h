@@ -1,5 +1,6 @@
 #pragma once
 #include "PIDControl.h"
+#include "Navigator.h"
 #include "vec_math.h"
 
 class PlaneController {
@@ -18,16 +19,16 @@ public:
 class PlaneGyro {
 private:
 	PlaneGyro() {}
-	~PlaneGyro() {}
-	
-	PlaneGyro(const PlaneGyro&) = delete;
-	PlaneGyro& operator=(const PlaneGyro&) = delete;
 
 	vec3 calibration_rotation;
 
-	static PlaneGyro inst;
 public:
+	PlaneGyro(const PlaneGyro&) = delete;
+	PlaneGyro& operator=(const PlaneGyro&) = delete;
+
 	static PlaneGyro& getInstance() {
+		static PlaneGyro inst;
+
 		return inst;
 	}
 public:
@@ -38,30 +39,21 @@ public:
 };
 
 class TimeChecker {
-	static TimeChecker inst;
-
 	Time last_checked;
 	double delta;
 
 	TimeChecker();
-
+public:
 	TimeChecker(const TimeChecker&) = delete;
 	TimeChecker& operator=(const TimeChecker&) = delete;
-public:
 	void update();
 	double deltaTime();
 
 	static TimeChecker& getInstance();
 };
 
-class YawController : public PIDControl {
-public:
-	YawController();
-
-	void Set(const double& angle);
-};
-
 class PitchController : public PIDControl {
+public:
 	PitchController();
 
 	void Set(const double& angle);
@@ -72,4 +64,19 @@ public:
 	RollController();
 
 	void Set(const double& angle);
+};
+
+class MasterControl {
+public:
+	Navigator* nav;
+
+private:
+	PitchController pitch_cont;
+	RollController roll_cont;
+
+public:
+	MasterControl() = delete;
+	MasterControl(Navigator* nav);
+
+	void process();
 };

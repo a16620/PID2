@@ -1,12 +1,15 @@
 #pragma once
-#include "PlaneControl.h"
 #include "vec_math.h"
+
+class PlaneGyro;
 
 class Navigator
 {
 public:
 	Navigator();
 private:
+	PlaneGyro& gyro;
+
 	Quat rotation;
 	vec3 position;
 	
@@ -24,4 +27,3 @@ public:
 	vec3 projection_angle(vec3 target) const;
 	vec3 adj_angle();
 };
-

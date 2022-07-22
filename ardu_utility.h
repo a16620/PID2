@@ -17,6 +17,18 @@ inline double math_map(double x, double in_min, double in_max, double out_min, d
 	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
+inline double math_map2(double x, double in_hrange, double out_hrange) {
+	return (x + in_hrange) * (in_hrange * 2) / (in_hrange*2) + out_hrange;
+}
+
+inline double math_constrain(double x, double min, double max) {
+	if (x < min)
+		return min;
+	if (x > max)
+		return max;
+	return x;
+}
+
 #ifdef WINDOWS
 #include <chrono>
 

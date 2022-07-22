@@ -1,40 +1,29 @@
 #include "PlaneControl.h"
 
-PlaneGyro PlaneGyro::inst;
-
-YawController::YawController()
-{
-	SetOutputLimit(100);
-}
-
-void YawController::Set(const double& angle)
-{
-	double v = GetControlValue(angle, PlaneGyro::getInstance().rotation.z);
-	short cv = math_map(v, -100, 100, -MATH_PI / 2, MATH_PI / 2);
-	PlaneController::SetRudder(cv);
-}
+constexpr double OutputLimit = 10;
+constexpr double MaxAngle = MATH_PI / 3;
 
 PitchController::PitchController()
 {
-	SetOutputLimit(100);
+	SetOutputLimit(OutputLimit);
 }
 
 void PitchController::Set(const double& angle)
 {
 	double v = GetControlValue(angle, PlaneGyro::getInstance().rotation.y);
-	short cv = math_map(v, -100, 100, -MATH_PI / 2, MATH_PI / 2);
+	double cv = math_map2(v, OutputLimit, MaxAngle);
 	PlaneController::SetElev(cv);
 }
 
 RollController::RollController()
 {
-	SetOutputLimit(100);
+	SetOutputLimit(OutputLimit);
 }
 
 void RollController::Set(const double& angle)
 {
 	double v = GetControlValue(angle, PlaneGyro::getInstance().rotation.x);
-	short cv = math_map(v, -100, 100, -MATH_PI / 2, MATH_PI / 2);
+	double cv = math_map2(v, OutputLimit, MaxAngle);
 	PlaneController::SetAiler1(cv);
 	PlaneController::SetAiler2(-cv);
 }
@@ -54,8 +43,6 @@ void PlaneGyro::calibrate()
 	calibration_rotation = sensor_input;
 	update();
 }
-
-TimeChecker TimeChecker::inst;
 
 TimeChecker::TimeChecker()
 {
@@ -77,5 +64,31 @@ double TimeChecker::deltaTime()
 
 TimeChecker& TimeChecker::getInstance()
 {
+	static TimeChecker inst;
+
 	return inst;
+}
+
+MasterControl::MasterControl(Navigator* nav)
+{
+	this->nav = nav;
+}
+
+void MasterControl::process()
+{
+	nav->update();
+
+	auto ang_adj = nav->adj_angle();
+
+	if (abs(ang_adj.z) >= MATH_PI / 18) { //10µµ ¿ÃªÛ
+		double ang = math_map(abs(ang_adj.z), MATH_PI / 18, MATH_PI, 0, MaxAngle)*math_sign(ang_adj.z);
+		roll_cont.Set(ang);
+	}
+	else {
+		roll_cont.Set(0);
+	}
+
+	double rd_ang = math_constrain(ang_adj.z*4, -MaxAngle, MaxAngle);
+
+	PlaneController::SetRudder(rd_ang);
 }
