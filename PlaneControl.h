@@ -52,14 +52,14 @@ public:
 	static TimeChecker& getInstance();
 };
 
-class PitchController : public PIDControl {
+class PitchController : protected PIDControl {
 public:
 	PitchController();
 
 	void Set(const double& angle);
 };
 
-class RollController : public PIDControl {
+class RollController : protected PIDControl {
 public:
 	RollController();
 

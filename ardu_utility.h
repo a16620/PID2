@@ -52,7 +52,7 @@ inline double GetTimeDelta(Time t1, Time t2) {
 }
 
 #else
-
+#include <Arduino.h>
 using Time = unsigned long;
 
 #define now millis

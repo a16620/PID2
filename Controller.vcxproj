@@ -146,8 +146,9 @@
     <ClInclude Include="vec_math.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="main.ino" />
     <ClCompile Include="Navigator.cpp" />
+    <ClCompile Include="PIDControl.cpp" />
     <ClCompile Include="PlaneControl.cpp" />
     <ClCompile Include="vec_math.cpp" />
   </ItemGroup>

@@ -32,7 +32,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="main.ino">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Navigator.cpp">
@@ -42,6 +42,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="vec_math.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="PIDControl.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
