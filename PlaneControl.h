@@ -38,6 +38,7 @@ public:
 	void calibrate();
 };
 
+//센서값 일괄 처리->시간 또한 통일
 class TimeChecker {
 	Time last_checked;
 	double delta;
@@ -52,6 +53,7 @@ public:
 	static TimeChecker& getInstance();
 };
 
+//엘레베이터
 class PitchController : protected PIDControl {
 public:
 	PitchController();
@@ -59,6 +61,7 @@ public:
 	void Set(const double& angle);
 };
 
+//에일러론
 class RollController : protected PIDControl {
 public:
 	RollController();

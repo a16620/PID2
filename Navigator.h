@@ -16,7 +16,7 @@ private:
 	bool go_forward;
 	vec3 forward_angle_target, target_pos;
 
-	vec3 plane_speed;
+	vec3 plane_speed; //아직 사용 안함
 
 public:
 	void update();

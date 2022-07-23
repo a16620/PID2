@@ -1,7 +1,7 @@
 #include "PlaneControl.h"
 
-constexpr double OutputLimit = 10;
-constexpr double MaxAngle = MATH_PI / 3;
+constexpr double OutputLimit = 10; //PID제어의 제대 출력
+constexpr double MaxAngle = MATH_PI / 3; //서보의 최대 각
 
 PitchController::PitchController()
 {
@@ -95,10 +95,23 @@ void MasterControl::process()
 
 void PlaneController::SetupPin()
 {
+	SetAiler1(0);
+	SetAiler2(0);
+
+	SetElev(0);
+
+	SetRudder(0);
 }
 
 void PlaneController::SetAiler1(const double& angle)
 {
+	static double last = 8; //초기에 0도 세팅시 무시 방지
+	if (abs(angle - last) < MATH_PI / 180) { //1도 미만 차이는 무시
+		return;
+	}
+
+	last = angle;
+	//실제 조종
 }
 
 void PlaneController::SetAiler2(const double& angle)

@@ -33,7 +33,7 @@ struct vec3 {
 	static const vec3 forward;
 };
 
-
+//회전 처리를 위한 사원수
 struct Quat {
 	double w;
 	vec3 v;
