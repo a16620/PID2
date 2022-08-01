@@ -4,7 +4,7 @@
 class PIDControl
 {
 private:
-	double kP, kI, kD, rD;
+	double kP, kI, kD;
 	
 	bool bIntegrating;
 	double integ_acc;

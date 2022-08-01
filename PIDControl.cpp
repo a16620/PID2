@@ -3,7 +3,6 @@
 
 PIDControl::PIDControl() noexcept {
 	kP = kD = kI = 0;
-	rD = 0.9;
 	integ_acc = last_error = last_deriv = 0;
 	bIntegrating = true;
 
@@ -33,7 +32,7 @@ double PIDControl::P_Control(const double& error) const noexcept {
 }
 
 double PIDControl::I_Control(const double& error, const double& dt) noexcept {
-	if (bIntegrating) //클리핑이 아닌 클램핑 방식
+	if (bIntegrating) //클램핑 방식
 		integ_acc += kI * error * dt; //kI를 미리 곱해 0인 경우에 값을 더하지 않음
 	
 	return integ_acc;
