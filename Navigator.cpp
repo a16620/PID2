@@ -9,7 +9,7 @@ Navigator::Navigator() : gyro(PlaneGyro::getInstance())
 void Navigator::update()
 {
     rotation = Quat::Euler(gyro.rotation);
-    position += Quat::rotate(plane_speed, rotation);
+    position += Quat::rotate(plane_speed, rotation)*TimeChecker::getInstance().deltaTime();
 }
 
 void Navigator::goForward()
@@ -21,6 +21,11 @@ void Navigator::goForward()
 void Navigator::followTarget()
 {
     go_forward = false;
+}
+
+void Navigator::setTarget(vec3 target)
+{
+    target_pos = target;
 }
 
 vec3 Navigator::projection_angle(vec3 target) const
