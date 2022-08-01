@@ -62,14 +62,11 @@ double PIDControl::GetControlValue(const double& target, const double& current) 
 	const auto error = target - current;
 	auto c_val = P_Control(error) + I_Control(error, time_delta) + D_Control(-current, time_delta);
 
-	if (abs(c_val) > output_limit) {
-		if (comp_sign(error, c_val))
-			bIntegrating = false;
-		c_val = output_limit * math_sign(c_val);
-	}
-	else {
-		bIntegrating = true;
-	}
+	bool overflow = abs(c_val) > output_limit;
+
+	bIntegrating = !overflow || comp_nsign(c_val, error);
+	if (overflow)
+		return copysign(output_limit, c_val);
 
 	return c_val;
 }

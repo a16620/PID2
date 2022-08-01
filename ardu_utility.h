@@ -6,11 +6,15 @@
 constexpr double MATH_PI = 3.14159265358979323;
 
 inline double math_sign(double x) noexcept {
-	return (x < 0) ? -1 : 1;
+	return signbit(x) ? -1 : 1;
 }
 
 inline bool comp_sign(double X, double Y) noexcept {
-	return !((X < 0) ^ (Y < 0));
+	return !comp_nsign(X, Y);
+}
+
+inline bool comp_nsign(double X, double Y) noexcept {
+	return signbit(X) ^ signbit(Y);
 }
 
 inline double math_map(double x, double in_min, double in_max, double out_min, double out_max) {
