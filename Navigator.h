@@ -25,6 +25,7 @@ public:
 	void followTarget();
 
 	void setTarget(vec3 target);
+	void setForward();
 
 	vec3 projection_angle(vec3 target) const;
 	vec3 adj_angle();

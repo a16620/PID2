@@ -15,7 +15,6 @@ void Navigator::update()
 void Navigator::goForward()
 {
     go_forward = true;
-    forward_angle_target = gyro.rotation; //현제 자세 기억
 }
 
 void Navigator::followTarget()
@@ -26,6 +25,11 @@ void Navigator::followTarget()
 void Navigator::setTarget(vec3 target)
 {
     target_pos = target;
+}
+
+void Navigator::setForward()
+{
+    forward_angle_target = gyro.rotation; //현제 자세 기억
 }
 
 vec3 Navigator::projection_angle(vec3 target) const

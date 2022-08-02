@@ -76,8 +76,6 @@ MasterControl::MasterControl(Navigator* nav)
 
 void MasterControl::process()
 {
-	nav->update();
-
 	auto ang_adj = nav->adj_angle();
 
 	if (abs(ang_adj.z) >= MATH_PI / 18) { //10µµ ¿ÃªÛ

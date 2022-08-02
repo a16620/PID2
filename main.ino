@@ -17,14 +17,15 @@ void setup() {
 void loop() {
 	switch (schedule[schedule_counter]) {
 	case 0:
+	{
 		TimeChecker::getInstance().update();
 		PlaneGyro::getInstance().update();
-
-		master.process();
 		break;
+	}
 	case 1:
 	{
-		//다른 작업
+		nav.update();
+		master.process();
 		break;
 	}
 	}
