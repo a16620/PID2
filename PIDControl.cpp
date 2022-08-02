@@ -15,6 +15,12 @@ void PIDControl::SetOutputLimit(const double& l) noexcept {
 	output_limit = l;
 }
 
+void PIDControl::Reset()
+{
+	integ_acc = 0;
+	bIntegrating = true;
+}
+
 void PIDControl::SetP(const double& p) noexcept {
 	kP = p;
 }
@@ -27,20 +33,20 @@ void PIDControl::SetD(const double& d) noexcept {
 	kD = d;
 }
 
-double PIDControl::P_Control(const double& error) const noexcept {
+inline double PIDControl::P_Control(const double& error) const noexcept {
 	return kP * error;
 }
 
-double PIDControl::I_Control(const double& error, const double& dt) noexcept {
+inline double PIDControl::I_Control(const double& error, const double& dt) noexcept {
 	if (bIntegrating) //클램핑 방식
 		integ_acc += kI * error * dt; //kI를 미리 곱해 0인 경우에 값을 더하지 않음
 	
 	return integ_acc;
 }
 
-double PIDControl::D_Control(const double& error, const double& dt) noexcept {
+inline double PIDControl::D_Control(const double& error, const double& dt) noexcept {
 	if (kD != 0 && dt != 0) {
-		const double d_value = min((error - last_error) / dt, output_limit); //클리핑
+		const double d_value = (error - last_error) / dt;
 
 		auto deriv = last_deriv + (dt / (filter + dt)) * (d_value - last_deriv);
 
@@ -53,13 +59,40 @@ double PIDControl::D_Control(const double& error, const double& dt) noexcept {
 	return 0;
 }
 
-double PIDControl::GetControlValue(const double& target, const double& current) noexcept {
-	static auto& time = TimeChecker::getInstance();
+inline double PIDControl::D_Control_Direct(const double& d_error, const double& dt) noexcept
+{
+	if (kD != 0 && dt != 0) {
+		auto deriv = last_deriv + (dt / (filter + dt)) * (d_error - last_deriv);
 
-	auto time_delta = time.deltaTime();
+		last_deriv = deriv;
+
+		return deriv * kD;
+	}
+
+	return 0;
+}
+
+double PIDControl::GetControlValue(const double& target, const double& current) noexcept {
+	auto time_delta = TimeChecker::getInstance().deltaTime();
 
 	const auto error = target - current;
 	auto c_val = P_Control(error) + I_Control(error, time_delta) + D_Control(-current, time_delta);
+
+	bool overflow = abs(c_val) > output_limit;
+
+	bIntegrating = !overflow || comp_nsign(c_val, error);
+	if (overflow)
+		return copysign(output_limit, c_val);
+
+	return c_val;
+}
+
+double PIDControl::GetControlValue(const double& target, const double& current, const double& delta) noexcept
+{
+	auto time_delta = TimeChecker::getInstance().deltaTime();
+
+	const auto error = target - current;
+	auto c_val = P_Control(error) + I_Control(error, time_delta) + D_Control_Direct(-delta, time_delta);
 
 	bool overflow = abs(c_val) > output_limit;
 

@@ -28,6 +28,12 @@ void RollController::Set(const double& angle)
 	PlaneController::SetAiler2(-cv);
 }
 
+inline PlaneGyro& PlaneGyro::getInstance()
+{
+	static PlaneGyro inst;
+	return inst;
+}
+
 void PlaneGyro::update()
 {
 	//읽기
@@ -62,33 +68,60 @@ double TimeChecker::deltaTime()
 	return delta;
 }
 
-TimeChecker& TimeChecker::getInstance()
+inline TimeChecker& TimeChecker::getInstance()
 {
 	static TimeChecker inst;
-
 	return inst;
 }
 
 MasterControl::MasterControl(Navigator* nav)
 {
+	mode = MODE::MODE_BEGIN_FLIGHT;
 	this->nav = nav;
 }
 
 void MasterControl::process()
 {
-	auto ang_adj = nav->adj_angle();
+	switch (mode)
+	{
+	case MODE::MODE_BEGIN_FLIGHT:
+	{
 
-	if (abs(ang_adj.z) >= MATH_PI / 18) { //10도 이상
-		double ang = math_map(abs(ang_adj.z), MATH_PI / 18, MATH_PI, 0, MaxAngle)*math_sign(ang_adj.z);
-		roll_cont.Set(ang);
+		break;
 	}
-	else {
-		roll_cont.Set(0);
+	case MODE::MODE_STEADY:
+	{
+		vec3 error_angle = steady_rotation - PlaneGyro::getInstance().rotation;
+
+		break;
 	}
+	case MODE::MODE_LAND:
+		break;
+	case MODE::MODE_NAV:
+	{
+		auto ang_adj = nav->adj_angle();
 
-	double rd_ang = math_constrain(ang_adj.z*4, -MaxAngle, MaxAngle);
+		if (abs(ang_adj.z) >= MATH_PI / 18) { //10도 이상
+			double ang = copysign(math_map(abs(ang_adj.z), MATH_PI / 18, MATH_PI, 0, MaxAngle), ang_adj.z);
+			roll_cont.Set(ang);
+		}
+		else {
+			roll_cont.Set(0);
+		}
 
-	PlaneController::SetRudder(rd_ang);
+		double rd_ang = math_constrain(ang_adj.z * 4, -MaxAngle, MaxAngle);
+
+		PlaneController::SetRudder(rd_ang);
+	}
+		break;
+	default:
+		break;
+	}
+}
+
+void MasterControl::setSteady()
+{
+	steady_rotation = PlaneGyro::getInstance().rotation;
 }
 
 void PlaneController::SetupPin()

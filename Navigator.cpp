@@ -1,35 +1,19 @@
 #include "Navigator.h"
 #include "PlaneControl.h"
 
-Navigator::Navigator() : gyro(PlaneGyro::getInstance())
+Navigator::Navigator()
 {
-    go_forward = true;
 }
 
 void Navigator::update()
 {
-    rotation = Quat::Euler(gyro.rotation);
+    rotation = Quat::Euler(PlaneGyro::getInstance().rotation);
     position += Quat::rotate(plane_speed, rotation)*TimeChecker::getInstance().deltaTime();
-}
-
-void Navigator::goForward()
-{
-    go_forward = true;
-}
-
-void Navigator::followTarget()
-{
-    go_forward = false;
 }
 
 void Navigator::setTarget(vec3 target)
 {
     target_pos = target;
-}
-
-void Navigator::setForward()
-{
-    forward_angle_target = gyro.rotation; //현제 자세 기억
 }
 
 vec3 Navigator::projection_angle(vec3 target) const
@@ -61,10 +45,6 @@ vec3 Navigator::projection_angle(vec3 target) const
 
 vec3 Navigator::adj_angle()
 {
-    if (go_forward) {
-        return forward_angle_target-gyro.rotation;
-    }
-    else {
-        return projection_angle(target_pos);
-    }
+    //나중에 수정
+    return projection_angle(target_pos);
 }

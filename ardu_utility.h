@@ -9,12 +9,12 @@ inline double math_sign(double x) noexcept {
 	return signbit(x) ? -1 : 1;
 }
 
-inline bool comp_sign(double X, double Y) noexcept {
-	return !comp_nsign(X, Y);
-}
-
 inline bool comp_nsign(double X, double Y) noexcept {
 	return signbit(X) ^ signbit(Y);
+}
+
+inline bool comp_sign(double X, double Y) noexcept {
+	return !comp_nsign(X, Y);
 }
 
 inline double math_map(double x, double in_min, double in_max, double out_min, double out_max) {

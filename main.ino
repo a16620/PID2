@@ -10,8 +10,6 @@ void setup() {
 	PlaneController::SetupPin();
 
 	PlaneGyro::getInstance().calibrate();
-
-	nav.goForward();
 }
 
 void loop() {

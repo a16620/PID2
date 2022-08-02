@@ -26,11 +26,8 @@ public:
 	PlaneGyro(const PlaneGyro&) = delete;
 	PlaneGyro& operator=(const PlaneGyro&) = delete;
 
-	static PlaneGyro& getInstance() {
-		static PlaneGyro inst;
+	inline static PlaneGyro& getInstance();
 
-		return inst;
-	}
 public:
 	vec3 rotation; //라디안각
 
@@ -50,7 +47,7 @@ public:
 	void update();
 	double deltaTime();
 
-	static TimeChecker& getInstance();
+	inline static TimeChecker& getInstance();
 };
 
 //엘레베이터
@@ -71,15 +68,28 @@ public:
 
 class MasterControl {
 public:
+	enum class MODE {
+		MODE_BEGIN_FLIGHT,
+		MODE_STEADY,
+		MODE_LAND,
+		MODE_NAV
+	};
+private:
 	Navigator* nav;
 
-private:
 	PitchController pitch_cont;
 	RollController roll_cont;
+	PIDControl yaw_cont;
+
+	MODE mode;
+
+	vec3 steady_rotation;
 
 public:
 	MasterControl() = delete;
 	MasterControl(Navigator* nav);
 
 	void process();
+
+	void setSteady();
 };
