@@ -3,6 +3,10 @@
 #include "Navigator.h"
 #include "vec_math.h"
 
+#define YAW z
+#define PITCH y
+#define ROLL x
+
 class PlaneController {
 public:
 	static void SetupPin();
@@ -26,7 +30,11 @@ public:
 	PlaneGyro(const PlaneGyro&) = delete;
 	PlaneGyro& operator=(const PlaneGyro&) = delete;
 
-	inline static PlaneGyro& getInstance();
+	inline static PlaneGyro& getInstance()
+	{
+		static PlaneGyro inst;
+		return inst;
+	}
 
 public:
 	vec3 rotation; //라디안각
@@ -47,11 +55,15 @@ public:
 	void update();
 	double deltaTime();
 
-	inline static TimeChecker& getInstance();
+	inline static TimeChecker& getInstance()
+	{
+		static TimeChecker inst;
+		return inst;
+	}
 };
 
 //엘레베이터
-class PitchController : protected PIDControl {
+class PitchController : public PIDControl {
 public:
 	PitchController();
 
@@ -59,9 +71,16 @@ public:
 };
 
 //에일러론
-class RollController : protected PIDControl {
+class RollController : public PIDControl {
 public:
 	RollController();
+
+	void Set(const double& angle);
+};
+
+class YawController : public PIDControl {
+public:
+	YawController();
 
 	void Set(const double& angle);
 };
@@ -71,6 +90,7 @@ public:
 	enum class MODE {
 		MODE_BEGIN_FLIGHT,
 		MODE_STEADY,
+		MODE_FORWARD,
 		MODE_LAND,
 		MODE_NAV
 	};
@@ -79,11 +99,13 @@ private:
 
 	PitchController pitch_cont;
 	RollController roll_cont;
-	PIDControl yaw_cont;
+	YawController yaw_cont;
 
 	MODE mode;
 
 	vec3 steady_rotation;
+
+	void ResetController();
 
 public:
 	MasterControl() = delete;
@@ -91,5 +113,8 @@ public:
 
 	void process();
 
+	void setMode(MODE m);
+
 	void setSteady();
+	void setSteady(vec3 std);
 };

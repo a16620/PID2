@@ -35,9 +35,9 @@ vec3 Navigator::projection_angle(vec3 target) const
 
     const auto size = rel_pos.size();
 
-    angle.y = asin(prj_z / size); //pitch 차
-    angle.z = asin(prj_y / size); //yaw 차
-    angle.x = prj_x; //거리
+    angle.PITCH = asin(prj_z / size); //pitch 차
+    angle.YAW = asin(prj_y / size); //yaw 차
+    angle.ROLL = prj_x; //거리
 
 
     return angle;

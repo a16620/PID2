@@ -10,9 +10,9 @@ PitchController::PitchController()
 
 void PitchController::Set(const double& angle)
 {
-	double v = GetControlValue(angle, PlaneGyro::getInstance().rotation.y);
-	double cv = math_map2(v, OutputLimit, MaxAngle);
-	PlaneController::SetElev(cv);
+	double v = GetControlValue(angle, PlaneGyro::getInstance().rotation.PITCH);
+	double rad_v = math_map2(v, OutputLimit, MaxAngle);
+	PlaneController::SetElev(rad_v);
 }
 
 RollController::RollController()
@@ -22,16 +22,22 @@ RollController::RollController()
 
 void RollController::Set(const double& angle)
 {
-	double v = GetControlValue(angle, PlaneGyro::getInstance().rotation.x);
-	double cv = math_map2(v, OutputLimit, MaxAngle);
-	PlaneController::SetAiler1(cv);
-	PlaneController::SetAiler2(-cv);
+	double v = GetControlValue(angle, PlaneGyro::getInstance().rotation.ROLL);
+	double rad_v = math_map2(v, OutputLimit, MaxAngle);
+	PlaneController::SetAiler1(rad_v);
+	PlaneController::SetAiler2(-rad_v);
 }
 
-inline PlaneGyro& PlaneGyro::getInstance()
+YawController::YawController()
 {
-	static PlaneGyro inst;
-	return inst;
+	SetOutputLimit(OutputLimit);
+}
+
+void YawController::Set(const double& angle)
+{
+	double v = GetControlValue(angle, PlaneGyro::getInstance().rotation.YAW);
+	double rad_v = math_map2(v, OutputLimit, MaxAngle);
+	PlaneController::SetRudder(rad_v);
 }
 
 void PlaneGyro::update()
@@ -68,10 +74,11 @@ double TimeChecker::deltaTime()
 	return delta;
 }
 
-inline TimeChecker& TimeChecker::getInstance()
+void MasterControl::ResetController()
 {
-	static TimeChecker inst;
-	return inst;
+	pitch_cont.Reset();
+	roll_cont.Reset();
+	yaw_cont.Reset();
 }
 
 MasterControl::MasterControl(Navigator* nav)
@@ -91,7 +98,17 @@ void MasterControl::process()
 	}
 	case MODE::MODE_STEADY:
 	{
-		vec3 error_angle = steady_rotation - PlaneGyro::getInstance().rotation;
+		pitch_cont.Set(steady_rotation.PITCH);
+		roll_cont.Set(steady_rotation.ROLL);
+		yaw_cont.Set(steady_rotation.YAW);
+
+		break;
+	}
+	case MODE::MODE_FORWARD:
+	{
+		pitch_cont.Set(steady_rotation.PITCH);
+		yaw_cont.Set(steady_rotation.YAW);
+
 
 		break;
 	}
@@ -112,16 +129,28 @@ void MasterControl::process()
 		double rd_ang = math_constrain(ang_adj.z * 4, -MaxAngle, MaxAngle);
 
 		PlaneController::SetRudder(rd_ang);
-	}
-		break;
-	default:
 		break;
 	}
+	}
+}
+
+void MasterControl::setMode(MODE m)
+{
+	if (m == mode)
+		return;
+
+	mode = m;
+	ResetController();
 }
 
 void MasterControl::setSteady()
 {
 	steady_rotation = PlaneGyro::getInstance().rotation;
+}
+
+void MasterControl::setSteady(vec3 std)
+{
+	steady_rotation = std;
 }
 
 void PlaneController::SetupPin()

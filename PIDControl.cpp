@@ -17,7 +17,7 @@ void PIDControl::SetOutputLimit(const double& l) noexcept {
 
 void PIDControl::Reset()
 {
-	integ_acc = 0;
+	last_deriv = last_error = integ_acc = 0;
 	bIntegrating = true;
 }
 
