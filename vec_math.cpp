@@ -9,7 +9,7 @@ vec3::vec3() {
 	x = y = z = 0;
 }
 
-vec3::vec3(double x, double y, double z) {
+vec3::vec3(float x, float y, float z) {
 	this->x = x;
 	this->y = y;
 	this->z = z;
@@ -27,11 +27,11 @@ vec3 vec3::operator-(const vec3& o) const {
 	return vec3(x - o.x, y - o.y, z - o.z);
 }
 
-vec3 vec3::operator*(const double& k) const {
+vec3 vec3::operator*(const float& k) const {
 	return vec3(k * x, k * y, k * z);
 }
 
-vec3 vec3::operator/(const double& k) const {
+vec3 vec3::operator/(const float& k) const {
 	return vec3(k / x, k / y, k / z);
 }
 
@@ -51,8 +51,8 @@ vec3& vec3::operator-=(const vec3& o) {
 	return *this;
 }
 
-double vec3::size() const {
-	return sqrt(sq(x) + sq(y) + sq(z));
+float vec3::size() const {
+	return sqrtf(sq(x) + sq(y) + sq(z));
 }
 
 vec3 vec3::normalized() const {
@@ -66,7 +66,7 @@ void vec3::normalize() {
 	z /= size;
 }
 
-double vec3::dot(const vec3& a, const vec3& b) {
+float vec3::dot(const vec3& a, const vec3& b) {
 	return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
@@ -85,17 +85,17 @@ Quat::Quat() {
 	v = vec3();
 }
 
-Quat::Quat(double w, vec3 v) {
+Quat::Quat(float w, vec3 v) {
 	this->w = w;
 	this->v = v;
 }
 
-Quat::Quat(double w, double x, double y, double z) {
+Quat::Quat(float w, float x, float y, float z) {
 	this->w = w;
 	v = vec3(x, y, z);
 }
 
-double Quat::sq_norm() const {
+float Quat::sq_norm() const {
 	return sq(w) + sq(v.x) + sq(v.y) + sq(v.z);
 }
 
@@ -107,11 +107,11 @@ Quat Quat::operator-() const {
 	return Quat(-w, -v);
 }
 
-Quat Quat::operator*(const double& k) const {
+Quat Quat::operator*(const float& k) const {
 	return Quat(w * k, v * k);
 }
 
-Quat Quat::operator/(const double& k) const {
+Quat Quat::operator/(const float& k) const {
 	return Quat(w / k, v / k);
 }
 
@@ -133,15 +133,15 @@ Quat Quat::operator*(const vec3& o) const {
 	return r;
 }
 
-Quat Quat::Euler(double x, double y, double z) {
+Quat Quat::Euler(float x, float y, float z) {
 	x /= 2;
 	y /= 2;
 	z /= 2;
 
 	Quat q;
 
-	const double sin_x = sin(x), sin_y = sin(y), sin_z = sin(z),
-		cos_x = cos(x), cos_y = cos(y), cos_z = cos(z);
+	const float sin_x = sinf(x), sin_y = sinf(y), sin_z = sinf(z),
+		cos_x = cosf(x), cos_y = cosf(y), cos_z = cosf(z);
 
 	q.w = cos_z * cos_y * cos_x + sin_z * sin_y * sin_x;
 	q.v.x = cos_z * cos_y * sin_x - sin_z * sin_y * cos_x;
@@ -156,8 +156,8 @@ Quat Quat::Euler(vec3 r) {
 
 	Quat q;
 
-	const double sin_x = sin(r.x), sin_y = sin(r.y), sin_z = sin(r.z),
-		cos_x = cos(r.x), cos_y = cos(r.y), cos_z = cos(r.z);
+	const float sin_x = sinf(r.x), sin_y = sinf(r.y), sin_z = sinf(r.z),
+		cos_x = cosf(r.x), cos_y = cosf(r.y), cos_z = cosf(r.z);
 
 	q.w = cos_z * cos_y * cos_x + sin_z * sin_y * sin_x;
 	q.v.x = cos_z * cos_y * sin_x - sin_z * sin_y * cos_x;

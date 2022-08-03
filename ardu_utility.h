@@ -3,29 +3,29 @@
 
 #define WINDOWS
 
-constexpr double MATH_PI = 3.14159265358979323;
+constexpr float MATH_PI = 3.14159265358979323f;
 
-inline double math_sign(double x) noexcept {
+inline float math_sign(float x) noexcept {
 	return signbit(x) ? -1 : 1;
 }
 
-inline bool comp_nsign(double X, double Y) noexcept {
+inline bool comp_nsign(float X, float Y) noexcept {
 	return signbit(X) ^ signbit(Y);
 }
 
-inline bool comp_sign(double X, double Y) noexcept {
+inline bool comp_sign(float X, float Y) noexcept {
 	return !comp_nsign(X, Y);
 }
 
-inline double math_map(double x, double in_min, double in_max, double out_min, double out_max) {
+inline float math_map(float x, float in_min, float in_max, float out_min, float out_max) {
 	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
-inline double math_map2(double x, double in_hrange, double out_hrange) {
+inline float math_map2(float x, float in_hrange, float out_hrange) {
 	return (x + in_hrange) * (in_hrange * 2) / (in_hrange*2) + out_hrange;
 }
 
-inline double math_constrain(double x, double min, double max) {
+inline float math_constrain(float x, float min, float max) {
 	if (x < min)
 		return min;
 	if (x > max)
@@ -50,9 +50,9 @@ inline Time now() {
 	return std::chrono::system_clock::now();
 }
 
-inline double GetTimeDelta(Time t1, Time t2) {
+inline float GetTimeDelta(Time t1, Time t2) {
 	auto delta = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
-	return static_cast<double>(delta) / 1000;
+	return static_cast<float>(delta) / 1000;
 }
 
 #else
@@ -61,9 +61,9 @@ using Time = unsigned long;
 
 #define now millis
 
-inline double GetTimeDelta(Time t1, Time t2) {
+inline float GetTimeDelta(Time t1, Time t2) {
 	auto delta = t2 - t1;
-	return static_cast<double>(delta) / 1000;
+	return static_cast<float>(delta) / 1000;
 }
 
 #endif

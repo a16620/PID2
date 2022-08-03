@@ -1,17 +1,17 @@
 #include "PlaneControl.h"
 
-constexpr double OutputLimit = 10; //PID제어의 제대 출력
-constexpr double MaxAngle = MATH_PI / 3; //서보의 최대 각
+constexpr float OutputLimit = 10; //PID제어의 제대 출력
+constexpr float MaxAngle = MATH_PI / 3; //서보의 최대 각
 
 PitchController::PitchController()
 {
 	SetOutputLimit(OutputLimit);
 }
 
-void PitchController::Set(const double& angle)
+void PitchController::Set(const float& angle)
 {
-	double v = GetControlValue(angle, PlaneGyro::getInstance().rotation.PITCH);
-	double rad_v = math_map2(v, OutputLimit, MaxAngle);
+	float v = GetControlValue(angle, PlaneGyro::getInstance().rotation.PITCH);
+	float rad_v = math_map2(v, OutputLimit, MaxAngle);
 	PlaneController::SetElev(rad_v);
 }
 
@@ -20,10 +20,10 @@ RollController::RollController()
 	SetOutputLimit(OutputLimit);
 }
 
-void RollController::Set(const double& angle)
+void RollController::Set(const float& angle)
 {
-	double v = GetControlValue(angle, PlaneGyro::getInstance().rotation.ROLL);
-	double rad_v = math_map2(v, OutputLimit, MaxAngle);
+	float v = GetControlValue(angle, PlaneGyro::getInstance().rotation.ROLL);
+	float rad_v = math_map2(v, OutputLimit, MaxAngle);
 	PlaneController::SetAiler1(rad_v);
 	PlaneController::SetAiler2(-rad_v);
 }
@@ -33,10 +33,10 @@ YawController::YawController()
 	SetOutputLimit(OutputLimit);
 }
 
-void YawController::Set(const double& angle)
+void YawController::Set(const float& angle)
 {
-	double v = GetControlValue(angle, PlaneGyro::getInstance().rotation.YAW);
-	double rad_v = math_map2(v, OutputLimit, MaxAngle);
+	float v = GetControlValue(angle, PlaneGyro::getInstance().rotation.YAW);
+	float rad_v = math_map2(v, OutputLimit, MaxAngle);
 	PlaneController::SetRudder(rad_v);
 }
 
@@ -69,7 +69,7 @@ void TimeChecker::update()
 	last_checked = _now;
 }
 
-double TimeChecker::deltaTime()
+float TimeChecker::deltaTime()
 {
 	return delta;
 }
@@ -119,14 +119,14 @@ void MasterControl::process()
 		auto ang_adj = nav->adj_angle();
 
 		if (abs(ang_adj.z) >= MATH_PI / 18) { //10도 이상
-			double ang = copysign(math_map(abs(ang_adj.z), MATH_PI / 18, MATH_PI, 0, MaxAngle), ang_adj.z);
+			float ang = copysign(math_map(abs(ang_adj.z), MATH_PI / 18, MATH_PI, 0, MaxAngle), ang_adj.z);
 			roll_cont.Set(ang);
 		}
 		else {
 			roll_cont.Set(0);
 		}
 
-		double rd_ang = math_constrain(ang_adj.z * 4, -MaxAngle, MaxAngle);
+		float rd_ang = math_constrain(ang_adj.z * 4, -MaxAngle, MaxAngle);
 
 		PlaneController::SetRudder(rd_ang);
 		break;
@@ -163,9 +163,9 @@ void PlaneController::SetupPin()
 	SetRudder(0);
 }
 
-void PlaneController::SetAiler1(const double& angle)
+void PlaneController::SetAiler1(const float& angle)
 {
-	static double last = 8; //초기에 0도 세팅시 무시 방지
+	static float last = 8; //초기에 0도 세팅시 무시 방지
 	if (abs(angle - last) < MATH_PI / 180) { //1도 미만 차이는 무시
 		return;
 	}
@@ -174,14 +174,14 @@ void PlaneController::SetAiler1(const double& angle)
 	//실제 조종
 }
 
-void PlaneController::SetAiler2(const double& angle)
+void PlaneController::SetAiler2(const float& angle)
 {
 }
 
-void PlaneController::SetRudder(const double& angle)
+void PlaneController::SetRudder(const float& angle)
 {
 }
 
-void PlaneController::SetElev(const double& angle)
+void PlaneController::SetElev(const float& angle)
 {
 }

@@ -11,7 +11,7 @@ PIDControl::PIDControl() noexcept {
 	output_limit = 200;
 }
 
-void PIDControl::SetOutputLimit(const double& l) noexcept {
+void PIDControl::SetOutputLimit(const float& l) noexcept {
 	output_limit = l;
 }
 
@@ -21,32 +21,32 @@ void PIDControl::Reset()
 	bIntegrating = true;
 }
 
-void PIDControl::SetP(const double& p) noexcept {
+void PIDControl::SetP(const float& p) noexcept {
 	kP = p;
 }
 
-void PIDControl::SetI(const double& i) noexcept {
+void PIDControl::SetI(const float& i) noexcept {
 	kI = i;
 }
 
-void PIDControl::SetD(const double& d) noexcept {
+void PIDControl::SetD(const float& d) noexcept {
 	kD = d;
 }
 
-inline double PIDControl::P_Control(const double& error) const noexcept {
+inline float PIDControl::P_Control(const float& error) const noexcept {
 	return kP * error;
 }
 
-inline double PIDControl::I_Control(const double& error, const double& dt) noexcept {
+inline float PIDControl::I_Control(const float& error, const float& dt) noexcept {
 	if (bIntegrating) //클램핑 방식
 		integ_acc += kI * error * dt; //kI를 미리 곱해 0인 경우에 값을 더하지 않음
 	
 	return integ_acc;
 }
 
-inline double PIDControl::D_Control(const double& error, const double& dt) noexcept {
+inline float PIDControl::D_Control(const float& error, const float& dt) noexcept {
 	if (kD != 0 && dt != 0) {
-		const double d_value = (error - last_error) / dt;
+		const float d_value = (error - last_error) / dt;
 
 		auto deriv = last_deriv + (dt / (filter + dt)) * (d_value - last_deriv);
 
@@ -59,7 +59,7 @@ inline double PIDControl::D_Control(const double& error, const double& dt) noexc
 	return 0;
 }
 
-inline double PIDControl::D_Control_Direct(const double& d_error, const double& dt) noexcept
+inline float PIDControl::D_Control_Direct(const float& d_error, const float& dt) noexcept
 {
 	if (kD != 0 && dt != 0) {
 		auto deriv = last_deriv + (dt / (filter + dt)) * (d_error - last_deriv);
@@ -72,7 +72,7 @@ inline double PIDControl::D_Control_Direct(const double& d_error, const double& 
 	return 0;
 }
 
-double PIDControl::GetControlValue(const double& target, const double& current) noexcept {
+float PIDControl::GetControlValue(const float& target, const float& current) noexcept {
 	auto time_delta = TimeChecker::getInstance().deltaTime();
 
 	const auto error = target - current;
@@ -87,7 +87,7 @@ double PIDControl::GetControlValue(const double& target, const double& current) 
 	return c_val;
 }
 
-double PIDControl::GetControlValue(const double& target, const double& current, const double& delta) noexcept
+float PIDControl::GetControlValue(const float& target, const float& current, const float& delta) noexcept
 {
 	auto time_delta = TimeChecker::getInstance().deltaTime();
 

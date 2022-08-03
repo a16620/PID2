@@ -11,12 +11,12 @@ class PlaneController {
 public:
 	static void SetupPin();
 
-	static void SetAiler1(const double& angle);
-	static void SetAiler2(const double& angle);
+	static void SetAiler1(const float& angle);
+	static void SetAiler2(const float& angle);
 
-	static void SetRudder(const double& angle);
+	static void SetRudder(const float& angle);
 	
-	static void SetElev(const double& angle);
+	static void SetElev(const float& angle);
 };
 
 //자이로 값은 3축을 한번에 읽음. 물리 읽기와 소프트웨어 읽기를 분리
@@ -46,14 +46,14 @@ public:
 //센서값 일괄 처리->시간 또한 통일
 class TimeChecker {
 	Time last_checked;
-	double delta;
+	float delta;
 
 	TimeChecker();
 public:
 	TimeChecker(const TimeChecker&) = delete;
 	TimeChecker& operator=(const TimeChecker&) = delete;
 	void update();
-	double deltaTime();
+	float deltaTime();
 
 	inline static TimeChecker& getInstance()
 	{
@@ -67,7 +67,7 @@ class PitchController : public PIDControl {
 public:
 	PitchController();
 
-	void Set(const double& angle);
+	void Set(const float& angle);
 };
 
 //에일러론
@@ -75,14 +75,14 @@ class RollController : public PIDControl {
 public:
 	RollController();
 
-	void Set(const double& angle);
+	void Set(const float& angle);
 };
 
 class YawController : public PIDControl {
 public:
 	YawController();
 
-	void Set(const double& angle);
+	void Set(const float& angle);
 };
 
 class MasterControl {

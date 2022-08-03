@@ -4,36 +4,36 @@
 class PIDControl
 {
 private:
-	double kP, kI, kD;
+	float kP, kI, kD;
 	
 	bool bIntegrating;
-	double integ_acc;
+	float integ_acc;
 	
-	double last_error, last_deriv, filter;
+	float last_error, last_deriv, filter;
 
-	double output_limit;
+	float output_limit;
 
 public:
 	PIDControl() noexcept;
 
-	void SetOutputLimit(const double& l) noexcept;
+	void SetOutputLimit(const float& l) noexcept;
 
 	void Reset();
 
-	void SetP(const double& p) noexcept;
-	void SetI(const double& i) noexcept;
-	void SetD(const double& d) noexcept;
+	void SetP(const float& p) noexcept;
+	void SetI(const float& i) noexcept;
+	void SetD(const float& d) noexcept;
 
 private:
-	inline double P_Control(const double& error) const noexcept;
-	inline double I_Control(const double& error, const double& dt) noexcept;
-	inline double D_Control(const double& error, const double& dt) noexcept;
+	inline float P_Control(const float& error) const noexcept;
+	inline float I_Control(const float& error, const float& dt) noexcept;
+	inline float D_Control(const float& error, const float& dt) noexcept;
 	
-	inline double D_Control_Direct(const double& d_error, const double& dt) noexcept;
+	inline float D_Control_Direct(const float& d_error, const float& dt) noexcept;
 
 
 public:
-	double GetControlValue(const double& target, const double& current) noexcept;
-	double GetControlValue(const double& target, const double& current, const double& delta) noexcept;
+	float GetControlValue(const float& target, const float& current) noexcept;
+	float GetControlValue(const float& target, const float& current, const float& delta) noexcept;
 };
 
